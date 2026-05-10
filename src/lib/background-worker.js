@@ -20,7 +20,7 @@ self.addEventListener("message", async function ({ data: e }) {
   try {
     const Module = await loadWASM({
       print: (text) => console.log("GS:", text),
-      printErr: (text) => console.error("GS Error:", text),
+      printErr: (text) => console.warn("GS:", text),
       locateFile: (path) => (path.endsWith(".wasm") ? wasmUrl : path),
     });
 

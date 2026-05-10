@@ -11,7 +11,7 @@ export async function _GSPS2PDF(dataStruct) {
   const dpi = dataStruct.dpi || 72;
   const quality = dataStruct.quality || 10;
 
-  const maxWorkers = Math.min(navigator.hardwareConcurrency || 2, 4);
+  const maxWorkers = Math.min(navigator.hardwareConcurrency || 4, 8);
 
   if (totalPages <= 4 || maxWorkers <= 1) {
     const jpegs = await runWorker(pdfBuffer, dpi, quality);
