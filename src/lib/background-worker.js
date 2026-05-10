@@ -4,8 +4,8 @@ import { PDFDocument } from "pdf-lib";
 const wasmUrl = import.meta.env.BASE_URL + "gs.wasm";
 
 const RASTERIZE = {
-  extreme: { dpi: 72, jpegQuality: 15 },
-  high: { dpi: 100, jpegQuality: 25 },
+  extreme: { dpi: 50, gsQuality: 60, finalQuality: 0.04 },
+  high: { dpi: 72, gsQuality: 70, finalQuality: 0.08 },
 };
 
 const PDFWRITE = {
@@ -59,6 +59,19 @@ const PDFWRITE = {
   ],
 };
 
+async function reencodeJpeg(jpegBytes, quality) {
+  const bitmap = await createImageBitmap(
+    new Blob([jpegBytes], { type: "image/jpeg" })
+  );
+  const { width, height } = bitmap;
+  const canvas = new OffscreenCanvas(width, height);
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(bitmap, 0, 0);
+  bitmap.close();
+  const blob = await canvas.convertToBlob({ type: "image/jpeg", quality });
+  return new Uint8Array(await blob.arrayBuffer());
+}
+
 self.addEventListener("message", async function ({ data: e }) {
   if (e.target !== "wasm") return;
 
@@ -70,7 +83,6 @@ self.addEventListener("message", async function ({ data: e }) {
     });
 
     Module.FS.writeFile("input.pdf", new Uint8Array(e.pdfData));
-
     const level = e.level || "high";
     let outputBytes;
 
@@ -85,7 +97,7 @@ self.addEventListener("message", async function ({ data: e }) {
         "-dNOPAUSE",
         "-dBATCH",
         `-r${cfg.dpi}`,
-        `-dJPEGQ=${cfg.jpegQuality}`,
+        `-dJPEGQ=${cfg.gsQuality}`,
         "-sOutputFile=page-%d.jpg",
         "input.pdf",
       ]);
@@ -93,11 +105,12 @@ self.addEventListener("message", async function ({ data: e }) {
       const jpegs = [];
       for (let i = 1; i <= origPages.length; i++) {
         try {
-          const data = Module.FS.readFile(`page-${i}.jpg`, {
+          const raw = Module.FS.readFile(`page-${i}.jpg`, {
             encoding: "binary",
           });
-          jpegs.push(data);
           Module.FS.unlink(`page-${i}.jpg`);
+          const optimized = await reencodeJpeg(raw, cfg.finalQuality);
+          jpegs.push(optimized);
         } catch {
           break;
         }
@@ -117,7 +130,6 @@ self.addEventListener("message", async function ({ data: e }) {
         const page = newDoc.addPage([width, height]);
         page.drawImage(img, { x: 0, y: 0, width, height });
       }
-
       outputBytes = await newDoc.save();
     } else {
       const args = PDFWRITE[level] || PDFWRITE.medium;
