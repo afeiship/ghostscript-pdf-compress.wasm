@@ -1,151 +1,184 @@
-import {useState} from "react";
+import { useState, useRef } from "react";
 import "./App.css";
-import {_GSPS2PDF} from "./lib/worker-init.js";
+import { _GSPS2PDF } from "./lib/worker-init.js";
 
+const LEVELS = [
+  {
+    key: "extreme",
+    label: "极高压缩",
+    desc: "最大程度节省存储空间",
+    detail: "光栅化压缩，不可搜索文字",
+  },
+  {
+    key: "high",
+    label: "高压缩",
+    desc: "最适合更快速的在线分享",
+    detail: "光栅化压缩，不可搜索文字",
+  },
+  {
+    key: "medium",
+    label: "中等压缩",
+    desc: "非常适合一般用途",
+    detail: "保留文字可搜索性",
+  },
+  {
+    key: "low",
+    label: "低压缩",
+    desc: "图像清晰，文件更小",
+    detail: "保留文字可搜索性",
+  },
+];
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + " B";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+}
 
 function App() {
   const [state, setState] = useState("init");
-  const [file, setFile] = useState(undefined);
-  const [downloadLink, setDownloadLink] = useState(undefined);
+  const [file, setFile] = useState(null);
+  const [level, setLevel] = useState("high");
+  const [result, setResult] = useState(null);
+  const inputRef = useRef(null);
 
-  async function compressPDF(pdf, filename) {
+  const handleFileChange = (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    setFile({ name: f.name, size: f.size, url: URL.createObjectURL(f) });
+    setState("selected");
+  };
+
+  const handleCompress = async () => {
+    setState("loading");
     try {
-      const dataObject = {psDataURL: pdf};
-      const pdfURL = await _GSPS2PDF(dataObject);
-      setDownloadLink(pdfURL);
-      setState("toBeDownloaded");
+      const res = await _GSPS2PDF({ psDataURL: file.url, level });
+      setResult(res);
+      setState("done");
     } catch (err) {
       console.error("Compression failed:", err);
       setState("error");
     }
-  }
-
-  const changeHandler = (event) => {
-    const file = event.target.files[0];
-    const url = window.URL.createObjectURL(file);
-    setFile({filename: file.name, url});
-    setState("selected");
   };
 
-  const onSubmit = (event) => {
-    event.preventDefault();
-    const {filename, url} = file;
-    compressPDF(url, filename);
-    setState("loading");
-    return false;
+  const handleReset = () => {
+    if (result?.url) URL.revokeObjectURL(result.url);
+    if (file?.url) URL.revokeObjectURL(file.url);
+    setFile(null);
+    setResult(null);
+    setState("init");
+    if (inputRef.current) inputRef.current.value = "";
   };
 
-  let minFileName =
-    file && file.filename && file.filename.replace(".pdf", "-min.pdf");
+  const minFileName = file?.name?.replace(/\.pdf$/i, "-min.pdf");
+  const savings =
+    file?.size && result?.size
+      ? ((1 - result.size / file.size) * 100).toFixed(1)
+      : 0;
+
   return (
-    <>
-      <h1>Free Browser side PDF-Compressor</h1>
-      <p>
-        The best tool I know to compress PDF is{" "}
-        <a target={"_blank"} href={"https://ghostscript.com/"}>
-          Ghostscript
-        </a>{" "}
-        but this was not running in the browser. Until{" "}
-        <a target={"_blank"} href={"https://github.com/ochachacha/ps-wasm"}>
-          Ochachacha
-        </a>{" "}
-        ported the lib in{" "}
-        <a target={"_blank"} href={"https://webassembly.org/"}>
-          Webassembly
-        </a>
-        .
+    <div className="app">
+      <h1>PDF 智能压缩</h1>
+      <p className="subtitle">
+        在浏览器中本地压缩，数据不会上传到服务器
       </p>
-      <p>
-        Based on his amazing work, I built this{" "}
-        <a
-          href={
-            "https://github.com/laurentmmeyer/ghostscript-pdf-compress.wasm"
-          }
-          target={"_blank"}
+
+      {state === "init" && (
+        <div
+          className="upload-area"
+          onClick={() => inputRef.current?.click()}
         >
-          demo
-        </a>
-        . It's running on Vite and React. It imports the WASM on the fly when
-        you want compress a PDF.
-      </p>
-      <p>
-        Be aware that the Webassembly binary is weighting <b>10MB</b>.
-      </p>
-      <p>
-        <i>
-          Secure and private by design: the data never leaves your computer.
-        </i>
-      </p>
-      {state !== "loading" && state !== "toBeDownloaded" && (
-        <form onSubmit={onSubmit}>
+          <div className="upload-icon">+</div>
+          <p>点击选择 PDF 文件</p>
           <input
+            ref={inputRef}
             type="file"
-            accept={"application/pdf"}
-            name="file"
-            onChange={changeHandler}
-            id={"file"}
+            accept="application/pdf"
+            onChange={handleFileChange}
+            hidden
           />
-          <div className={"label padded-button"}>
-            <label htmlFor={"file"}>
-              {!file || !file.filename
-                ? `Choose PDF to compress`
-                : file.filename}
-            </label>
+        </div>
+      )}
+
+      {(state === "selected" || state === "loading") && file && (
+        <div className="file-info">
+          <span className="file-name">{file.name}</span>
+          <span className="file-size">{formatSize(file.size)}</span>
+        </div>
+      )}
+
+      {state === "selected" && (
+        <>
+          <h3>选择压缩选项</h3>
+          <div className="level-grid">
+            {LEVELS.map((l) => (
+              <div
+                key={l.key}
+                className={`level-card ${level === l.key ? "selected" : ""}`}
+                onClick={() => setLevel(l.key)}
+              >
+                <div className="level-label">{l.label}</div>
+                <div className="level-desc">{l.desc}</div>
+                <div className="level-detail">{l.detail}</div>
+              </div>
+            ))}
           </div>
-          {state === "selected" && (
-            <div className={"success-button padded-button padding-top"}>
-              <input
-                className={"button"}
-                type="submit"
-                value={"🚀 Compress this PDF in the browser! 🚀"}
-              />
+          <button className="compress-btn" onClick={handleCompress}>
+            开始压缩
+          </button>
+        </>
+      )}
+
+      {state === "loading" && (
+        <div className="loading">
+          <div className="spinner" />
+          <p>正在压缩中...</p>
+        </div>
+      )}
+
+      {state === "done" && (
+        <div className="result">
+          <div className="result-header">压缩完成</div>
+          <div className="size-comparison">
+            <div className="size-item">
+              <span className="size-label">原始大小</span>
+              <span className="size-value original">
+                {formatSize(file.size)}
+              </span>
             </div>
+            <div className="size-arrow">&rarr;</div>
+            <div className="size-item">
+              <span className="size-label">压缩后</span>
+              <span className="size-value compressed">
+                {formatSize(result.size)}
+              </span>
+            </div>
+          </div>
+          {savings > 0 && (
+            <div className="savings">节省了 {savings}%</div>
           )}
-        </form>
+          <a
+            href={result.url}
+            download={minFileName}
+            className="download-btn"
+          >
+            下载 {minFileName}
+          </a>
+          <button className="reset-btn" onClick={handleReset}>
+            压缩另一个文件
+          </button>
+        </div>
       )}
-      {state === "loading" && "Loading...."}
+
       {state === "error" && (
-        <>
-          <p style={{color: "red"}}>Compression failed. Check the console for details.</p>
-          <div className={"blue padded-button padding-top"}>
-            <a href={"./"}>{"Try again"}</a>
-          </div>
-        </>
+        <div className="error-box">
+          <p>压缩失败，请检查文件是否为有效的 PDF。</p>
+          <button className="reset-btn" onClick={handleReset}>
+            重试
+          </button>
+        </div>
       )}
-      {state === "toBeDownloaded" && (
-        <>
-          <div className={"success-button padded-button"}>
-            <a href={downloadLink} download={minFileName}>
-              {`📄 Download ${minFileName} 📄`}
-            </a>
-          </div>
-          <div className={"blue padded-button padding-top"}>
-            <a href={"./"}>{`🔁 Compress another PDF 🔁`}</a>
-          </div>
-        </>
-      )}
-      <p>
-        Everything is open-source and you can contribute{" "}
-        <a
-          href={
-            "https://github.com/laurentmmeyer/ghostscript-pdf-compress.wasm"
-          }
-          target={"_blank"}
-        >
-          here
-        </a>
-        .
-      </p>
-      <br/>
-      <p>
-        <i>This website uses no tracking, no cookies, no adtech.</i>
-      </p>
-      <p>
-        <a target={"_blank"} href={"https://meyer-laurent.com"}>
-          About me
-        </a>
-      </p>
-    </>
+    </div>
   );
 }
 

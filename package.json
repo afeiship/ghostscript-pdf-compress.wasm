@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@okathira/ghostpdl-wasm": "^1.1.0",
+    "@squoosh-kit/core": "^0.2.4",
+    "@squoosh-kit/mozjpeg": "^0.2.4",
+    "pdf-lib": "^1.17.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

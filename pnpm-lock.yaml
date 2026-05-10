@@ -11,6 +11,15 @@ importers:
       '@okathira/ghostpdl-wasm':
         specifier: ^1.1.0
         version: 1.1.0
+      '@squoosh-kit/core':
+        specifier: ^0.2.4
+        version: 0.2.4
+      '@squoosh-kit/mozjpeg':
+        specifier: ^0.2.4
+        version: 0.2.4
+      pdf-lib:
+        specifier: ^1.17.1
+        version: 1.17.1
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -171,6 +180,58 @@ packages:
 
   '@okathira/ghostpdl-wasm@1.1.0':
     resolution: {integrity: sha512-BX0Y8B0G/c0nsf7pZGHPQTZ8IiT4w0IEbZGDnziN4pkcmxU1eEaWI/LA0bfE5Y+uSP3Qj1oZ6JhITOJbJsyE0w==}
+
+  '@pdf-lib/standard-fonts@1.0.0':
+    resolution: {integrity: sha512-hU30BK9IUN/su0Mn9VdlVKsWBS6GyhVfqjwl1FjZN4TxP6cCw0jP2w7V3Hf5uX7M0AZJ16vey9yE0ny7Sa59ZA==}
+
+  '@pdf-lib/upng@1.0.1':
+    resolution: {integrity: sha512-dQK2FUMQtowVP00mtIksrlZhdFXQZPC+taih1q4CvPZ5vqdxR/LKBaFg0oAfzd1GlHZXXSPdQfzQnt+ViGvEIQ==}
+
+  '@squoosh-kit/avif@0.2.4':
+    resolution: {integrity: sha512-b2X9wu4t0om93o9/x7SHRZeUMU4ow5vDEGb4ugxbZ8OvfD2yp+0ZR3kwWaq8s46pKDklSpLgpBFke2aPt57X0w==}
+
+  '@squoosh-kit/core@0.2.4':
+    resolution: {integrity: sha512-PDeEg2pAQcueDc5zI5Ex2HTk7e55Q1qBAvCg3Jbotpnm/Zn387ZxLnC/rUtklWi/ytoV1LGqWeGk7EjdgowPuA==}
+    engines: {bun: '>=1.0.0', node: '>=18.0.0'}
+
+  '@squoosh-kit/hqx@0.2.4':
+    resolution: {integrity: sha512-LhG0ibeCZwy1NK3OHYMAcza7XLxNSbR0XKoNUY1EPUaay1jHkqbs/n+TEmTbKeZLVHDNusscHrb03s9PbcKIbQ==}
+
+  '@squoosh-kit/imagequant@0.2.4':
+    resolution: {integrity: sha512-iTIglNP/UyHPnMIOHIyG8TPGOqatyhrs8sbfrIr2vWoNLFRDMxBTwJ3BrQNMB0yfw6FNLaOv5MuM7UgNJRvWUA==}
+
+  '@squoosh-kit/jxl@0.2.4':
+    resolution: {integrity: sha512-FSomISFC0iDpk+B82gQkk4dmGLL9BslhawtVuddhuQetHH3SISB8SgJhaCHpiBnH7BdoNiyEnqH4k4RizCF3NQ==}
+
+  '@squoosh-kit/mozjpeg@0.2.4':
+    resolution: {integrity: sha512-bIsXpnbvCA7ETwCPCs4wYCmUisboCNEcHv67fDWEI52kRX13HlAQhDikNep2P1MkjGkNgeogIOAaxWJ9kVfA0g==}
+
+  '@squoosh-kit/oxipng@0.2.4':
+    resolution: {integrity: sha512-3Cx4OW0q7PpyBYB9ss967lKAT7XB0IrNDKbRyrp2dJ8fd9odutdY3i4kf01SYKMbMRzM/5XnnkpjHTjZ3CdNAQ==}
+
+  '@squoosh-kit/png@0.2.4':
+    resolution: {integrity: sha512-IPY++9hYoy6An8nG9jCbGe0UxVAmyMAlcN1ViUUXL+Ingi62LAal/ARxWxNjgrY5G0fOtAQZxpiCbOOIY2/amQ==}
+
+  '@squoosh-kit/qoi@0.2.4':
+    resolution: {integrity: sha512-5euECdD4ZoL1nuVOdR1iTq8Zb0pjdu55WRWdVQZfACqOAgQ56UpYqnmCwW6gdQd3/mS6dNpAnZdLDH8FgKUShA==}
+
+  '@squoosh-kit/resize@0.2.4':
+    resolution: {integrity: sha512-FQ3DWq1DdA63O8tO00p37aH5DF/HIVfO2+/iKvykjhgnDe5A0HZ82GkXK8KCQ+pe0tgjS6yBGU/bKfR6ZikdDA==}
+
+  '@squoosh-kit/rotate@0.2.4':
+    resolution: {integrity: sha512-uOzpFraZN51dB3ghDj3giJ7HMVbkpiBDR4cBhqXToKH4h6RTgrklWHS6nKEkUvKV6x2t2Mnbh87OgshMZO/s8Q==}
+
+  '@squoosh-kit/runtime@0.2.4':
+    resolution: {integrity: sha512-tOWFHWUfABN2Br4uRkgO83UzYiLCzh/jiFG1QmZPw4vc8x9l6v/Mng/y6QKNjewgxrnfQJbEc7khhBnLurYC3A==}
+
+  '@squoosh-kit/visdif@0.2.4':
+    resolution: {integrity: sha512-QTJXtyTA3R1rBsGa41z17kPkgJ9UtTRB1xNQlvvWoPQHSSJRjW32WTCg5Ledh2vyoJNeQAKk7xQdNyPxDiHW4w==}
+
+  '@squoosh-kit/webp@0.2.4':
+    resolution: {integrity: sha512-VsIxzP+m01IrI0BYrEgUCnlaApcpCaIiP0suGt/8R2y4/C0m67nobSyEnx0Z4yHwIJHL2E7/61kvHtaXFC7t0w==}
+
+  '@squoosh-kit/wp2@0.2.4':
+    resolution: {integrity: sha512-JNEEG/uueIgtwI/CGU5sm9M5KG2RKal0jb2z8sa7n79RE8z/UsxTdnhsupOYcQZfFOc1JlJ+8rqmyi4Ew70TAw==}
 
   '@types/emscripten@1.41.5':
     resolution: {integrity: sha512-cMQm7pxu6BxtHyqJ7mQZ2kXWV5SLmugybFdHCBbJ5eHzOo6VhBckEgAT3//rP5FwPHNPeEiq4SmQ5ucBwsOo4Q==}
@@ -411,8 +472,14 @@ packages:
   node-releases@2.0.38:
     resolution: {integrity: sha512-3qT/88Y3FbH/Kx4szpQQ4HzUbVrHPKTLVpVocKiLfoYvw9XSGOX2FmD2d6DrXbVYyAQTF2HeF6My8jmzx7/CRw==}
 
+  pako@1.0.11:
+    resolution: {integrity: sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==}
+
   path-parse@1.0.7:
     resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
+
+  pdf-lib@1.17.1:
+    resolution: {integrity: sha512-V/mpyJAoTsN4cnP31vc0wfNA1+p20evqqnap0KLoRUN0Yk/p3wN52DOEsL4oBFcLdb76hlpKPtzJIgo67j/XLw==}
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -468,6 +535,9 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  tslib@1.14.1:
+    resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
+
   update-browserslist-db@1.2.3:
     resolution: {integrity: sha512-Js0m9cx+qOgDxo0eMiFGEueWztz+d4+M3rGlmKPT+T4IS/jP4ylw3Nwpu6cpTTP8R1MAC1kF4VbdLt3ARf209w==}
     hasBin: true
@@ -498,6 +568,9 @@ packages:
         optional: true
       terser:
         optional: true
+
+  wasm-feature-detect@1.8.0:
+    resolution: {integrity: sha512-zksaLKM2fVlnB5jQQDqKXXwYHLQUVH9es+5TOOHwGOVJOCeRBCiPjwSg+3tN2AdTCzjgli4jijCH290kXb/zWQ==}
 
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
@@ -671,6 +744,87 @@ snapshots:
   '@okathira/ghostpdl-wasm@1.1.0':
     dependencies:
       '@types/emscripten': 1.41.5
+
+  '@pdf-lib/standard-fonts@1.0.0':
+    dependencies:
+      pako: 1.0.11
+
+  '@pdf-lib/upng@1.0.1':
+    dependencies:
+      pako: 1.0.11
+
+  '@squoosh-kit/avif@0.2.4':
+    dependencies:
+      '@squoosh-kit/runtime': 0.2.4
+
+  '@squoosh-kit/core@0.2.4':
+    dependencies:
+      '@squoosh-kit/avif': 0.2.4
+      '@squoosh-kit/hqx': 0.2.4
+      '@squoosh-kit/imagequant': 0.2.4
+      '@squoosh-kit/jxl': 0.2.4
+      '@squoosh-kit/mozjpeg': 0.2.4
+      '@squoosh-kit/oxipng': 0.2.4
+      '@squoosh-kit/png': 0.2.4
+      '@squoosh-kit/qoi': 0.2.4
+      '@squoosh-kit/resize': 0.2.4
+      '@squoosh-kit/rotate': 0.2.4
+      '@squoosh-kit/runtime': 0.2.4
+      '@squoosh-kit/visdif': 0.2.4
+      '@squoosh-kit/webp': 0.2.4
+      '@squoosh-kit/wp2': 0.2.4
+
+  '@squoosh-kit/hqx@0.2.4':
+    dependencies:
+      '@squoosh-kit/runtime': 0.2.4
+
+  '@squoosh-kit/imagequant@0.2.4':
+    dependencies:
+      '@squoosh-kit/runtime': 0.2.4
+
+  '@squoosh-kit/jxl@0.2.4':
+    dependencies:
+      '@squoosh-kit/runtime': 0.2.4
+
+  '@squoosh-kit/mozjpeg@0.2.4':
+    dependencies:
+      '@squoosh-kit/runtime': 0.2.4
+
+  '@squoosh-kit/oxipng@0.2.4':
+    dependencies:
+      '@squoosh-kit/runtime': 0.2.4
+
+  '@squoosh-kit/png@0.2.4':
+    dependencies:
+      '@squoosh-kit/runtime': 0.2.4
+
+  '@squoosh-kit/qoi@0.2.4':
+    dependencies:
+      '@squoosh-kit/runtime': 0.2.4
+
+  '@squoosh-kit/resize@0.2.4':
+    dependencies:
+      '@squoosh-kit/runtime': 0.2.4
+
+  '@squoosh-kit/rotate@0.2.4':
+    dependencies:
+      '@squoosh-kit/runtime': 0.2.4
+
+  '@squoosh-kit/runtime@0.2.4':
+    dependencies:
+      wasm-feature-detect: 1.8.0
+
+  '@squoosh-kit/visdif@0.2.4':
+    dependencies:
+      '@squoosh-kit/runtime': 0.2.4
+
+  '@squoosh-kit/webp@0.2.4':
+    dependencies:
+      '@squoosh-kit/runtime': 0.2.4
+
+  '@squoosh-kit/wp2@0.2.4':
+    dependencies:
+      '@squoosh-kit/runtime': 0.2.4
 
   '@types/emscripten@1.41.5': {}
 
@@ -848,7 +1002,16 @@ snapshots:
 
   node-releases@2.0.38: {}
 
+  pako@1.0.11: {}
+
   path-parse@1.0.7: {}
+
+  pdf-lib@1.17.1:
+    dependencies:
+      '@pdf-lib/standard-fonts': 1.0.0
+      '@pdf-lib/upng': 1.0.1
+      pako: 1.0.11
+      tslib: 1.14.1
 
   picocolors@1.1.1: {}
 
@@ -895,6 +1058,8 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
+  tslib@1.14.1: {}
+
   update-browserslist-db@1.2.3(browserslist@4.28.2):
     dependencies:
       browserslist: 4.28.2
@@ -909,5 +1074,7 @@ snapshots:
       rollup: 2.80.0
     optionalDependencies:
       fsevents: 2.3.3
+
+  wasm-feature-detect@1.8.0: {}
 
   yallist@3.1.1: {}

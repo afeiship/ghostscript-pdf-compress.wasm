@@ -1,91 +1,257 @@
-#root {
-  max-width: 100%;
+.app {
+  max-width: 520px;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-  box-sizing: border-box;
+  padding: 2rem 1rem;
 }
 
-@media screen and (min-width: 1200px) {
-  #root {
-    max-width: 1280px;
+h1 {
+  font-size: 1.6rem;
+  margin-bottom: 0.3rem;
+}
+
+h3 {
+  text-align: left;
+  margin: 1.5rem 0 0.8rem;
+  color: #333;
+}
+
+.subtitle {
+  color: #888;
+  font-size: 0.85rem;
+  margin-bottom: 2rem;
+}
+
+/* Upload */
+.upload-area {
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fafafa;
+}
+
+.upload-area:hover {
+  border-color: #4a7dff;
+  background: #f0f5ff;
+}
+
+.upload-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.8rem;
+  color: #aaa;
+}
+
+.upload-area p {
+  color: #888;
+  margin: 0;
+}
+
+/* File info */
+.file-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1.2rem;
+  background: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.file-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 70%;
+}
+
+.file-size {
+  color: #888;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+/* Level cards */
+.level-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.level-card {
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+}
+
+.level-card:hover {
+  border-color: #4a7dff;
+}
+
+.level-card.selected {
+  border-color: #4a7dff;
+  background: #f0f5ff;
+}
+
+.level-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.2rem;
+  color: #1a1a2e;
+}
+
+.level-desc {
+  font-size: 0.8rem;
+  color: #555;
+  margin-bottom: 0.15rem;
+}
+
+.level-detail {
+  font-size: 0.7rem;
+  color: #999;
+}
+
+/* Buttons */
+.compress-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background: #4a7dff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.compress-btn:hover {
+  background: #3a6de8;
+}
+
+.download-btn {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  background: #2eaa4a;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.download-btn:hover {
+  background: #28974a;
+}
+
+.reset-btn {
+  width: 100%;
+  padding: 0.7rem;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #555;
+}
+
+.reset-btn:hover {
+  background: #eee;
+}
+
+/* Loading */
+.loading {
+  padding: 3rem 0;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #e0e0e0;
+  border-top-color: #4a7dff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
-form {
-  margin: 0 auto;
-  padding: 20px;
-  width: 400px;
-  max-width: 100%;
-  box-sizing: border-box;
-  height: auto;
-  overflow: hidden;
-  background: #ffffff;
-  border-radius: 3px;
+.loading p {
+  color: #888;
 }
 
-label {
-  margin: 0;
-  width: auto;
-  max-width: 300px;
-  height: auto;
-  border: none;
-  color: #fff;
-  cursor: pointer;
+/* Result */
+.result-header {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2eaa4a;
+  margin-bottom: 1.2rem;
+}
+
+.size-comparison {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.size-item {
   text-align: center;
-  -webkit-transition: 0.2s ease all;
-  -moz-transition: 0.2s ease all;
-  -ms-transition: 0.2s ease all;
-  -o-transition: 0.2s ease all;
-  transition: 0.2s ease all;
 }
 
-.padded-button {
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  padding: 10px;
+.size-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #888;
+  margin-bottom: 0.2rem;
 }
 
-.label {
-  background-color: #929292;
+.size-value {
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
-.success-button {
-  background-color: #65b453;
+.size-value.original {
+  color: #e74c3c;
 }
 
-.padding-top {
-  margin-top: 30px;
+.size-value.compressed {
+  color: #2eaa4a;
 }
 
-[type="file"] {
-  display: none;
+.size-arrow {
+  font-size: 1.3rem;
+  color: #999;
 }
 
-[type="submit"],
-.green,
-.blue {
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  font-size: large;
-  -webkit-transition: 0.2s ease all;
-  -moz-transition: 0.2s ease all;
-  -ms-transition: 0.2s ease all;
-  -o-transition: 0.2s ease all;
-  transition: 0.2s ease all;
-  white-space: normal;
-  background: transparent;
+.savings {
+  font-size: 0.95rem;
+  color: #2eaa4a;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
 }
 
-div > a {
-  color: white;
+/* Error */
+.error-box {
+  color: #e74c3c;
 }
 
-div > a:hover {
-  color: #ececec;
-}
-
-.blue {
-  background-color: #646cff;
+.error-box p {
+  margin-bottom: 1rem;
 }
