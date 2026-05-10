@@ -1,74 +1,38 @@
-function loadScript() {
-  import("./gs-worker.js");
-}
+import loadWASM from "@okathira/ghostpdl-wasm";
 
-var Module;
+const wasmUrl = import.meta.env.BASE_URL + "gs.wasm";
 
-function _GSPS2PDF(
-  dataStruct,
-  responseCallback,
-) {
-  // first download the ps data
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", dataStruct.psDataURL);
-  xhr.responseType = "arraybuffer";
-  xhr.onload = function () {
-    console.log('onload')
-    // release the URL
-    self.URL.revokeObjectURL(dataStruct.psDataURL);
-    //set up EMScripten environment
-    Module = {
-      preRun: [
-        function () {
-          self.Module.FS.writeFile("input.pdf", new Uint8Array(xhr.response));
-        },
-      ],
-      postRun: [
-        function () {
-          var uarray = self.Module.FS.readFile("output.pdf", { encoding: "binary" });
-          var blob = new Blob([uarray], { type: "application/octet-stream" });
-          var pdfDataURL = self.URL.createObjectURL(blob);
-          responseCallback({ pdfDataURL: pdfDataURL, url: dataStruct.url });
-        },
-      ],
-      arguments: [
-        "-sDEVICE=pdfwrite",
-        "-dCompatibilityLevel=1.4",
-        "-dPDFSETTINGS=/ebook",
-        "-DNOPAUSE",
-        "-dQUIET",
-        "-dBATCH",
-        "-sOutputFile=output.pdf",
-        "input.pdf",
-      ],
-      print: function (text) {},
-      printErr: function (text) {},
-      totalDependencies: 0,
-      noExitRuntime: 1
-    };
-    // Module.setStatus("Loading Ghostscript...");
-    if (!self.Module) {
-      self.Module = Module;
-      loadScript();
-    } else {
-      self.Module["calledRun"] = false;
-      self.Module["postRun"] = Module.postRun;
-      self.Module["preRun"] = Module.preRun;
-      self.Module.callMain();
+self.addEventListener('message', async function ({ data: e }) {
+  if (e.target !== 'wasm') return;
+
+  try {
+    const Module = await loadWASM({
+      print: (text) => console.log("GS:", text),
+      printErr: (text) => console.error("GS Error:", text),
+      locateFile: (path) => path.endsWith('.wasm') ? wasmUrl : path,
+    });
+
+    Module.FS.writeFile("input.pdf", new Uint8Array(e.pdfData));
+
+    const exitCode = Module.callMain([
+      "-sDEVICE=pdfwrite",
+      "-dCompatibilityLevel=1.4",
+      "-dPDFSETTINGS=/ebook",
+      "-dNOPAUSE",
+      "-dBATCH",
+      "-sOutputFile=output.pdf",
+      "input.pdf",
+    ]);
+
+    if (exitCode !== 0) {
+      self.postMessage({ error: `Ghostscript exited with code ${exitCode}` });
+      return;
     }
-  };
-  xhr.send();
-}
 
+    const output = Module.FS.readFile("output.pdf", { encoding: "binary" });
 
-self.addEventListener('message', function({data:e}) {
-  console.log("message", e)
-  // e.data contains the message sent to the worker.
-  if (e.target !== 'wasm'){
-    return;
+    self.postMessage({ pdfOutput: output.buffer }, [output.buffer]);
+  } catch (err) {
+    self.postMessage({ error: err.message || String(err) });
   }
-  console.log('Message received from main script', e.data);
-  _GSPS2PDF(e.data, ({pdfDataURL}) => self.postMessage(pdfDataURL))
 });
-
-console.log("Worker ready")

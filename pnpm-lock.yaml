@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@okathira/ghostpdl-wasm':
+        specifier: ^1.1.0
+        version: 1.1.0
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -165,6 +168,12 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@okathira/ghostpdl-wasm@1.1.0':
+    resolution: {integrity: sha512-BX0Y8B0G/c0nsf7pZGHPQTZ8IiT4w0IEbZGDnziN4pkcmxU1eEaWI/LA0bfE5Y+uSP3Qj1oZ6JhITOJbJsyE0w==}
+
+  '@types/emscripten@1.41.5':
+    resolution: {integrity: sha512-cMQm7pxu6BxtHyqJ7mQZ2kXWV5SLmugybFdHCBbJ5eHzOo6VhBckEgAT3//rP5FwPHNPeEiq4SmQ5ucBwsOo4Q==}
 
   '@types/prop-types@15.7.15':
     resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
@@ -658,6 +667,12 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@okathira/ghostpdl-wasm@1.1.0':
+    dependencies:
+      '@types/emscripten': 1.41.5
+
+  '@types/emscripten@1.41.5': {}
 
   '@types/prop-types@15.7.15': {}
 

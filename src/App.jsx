@@ -3,33 +3,21 @@ import "./App.css";
 import {_GSPS2PDF} from "./lib/worker-init.js";
 
 
-function loadPDFData(response, filename) {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", response);
-    xhr.responseType = "arraybuffer";
-    xhr.onload = function () {
-      window.URL.revokeObjectURL(response);
-      const blob = new Blob([xhr.response], {type: "application/pdf"});
-      const pdfURL = window.URL.createObjectURL(blob);
-      const size = xhr.response.byteLength;
-      resolve({pdfURL, size});
-    };
-    xhr.send();
-  });
-}
-
 function App() {
   const [state, setState] = useState("init");
   const [file, setFile] = useState(undefined);
   const [downloadLink, setDownloadLink] = useState(undefined);
 
   async function compressPDF(pdf, filename) {
-    const dataObject = {psDataURL: pdf};
-    const element = await _GSPS2PDF(dataObject)
-    const {pdfURL, size: newSize} = await loadPDFData(element, filename)
-    setDownloadLink(pdfURL);
-    setState("toBeDownloaded");
+    try {
+      const dataObject = {psDataURL: pdf};
+      const pdfURL = await _GSPS2PDF(dataObject);
+      setDownloadLink(pdfURL);
+      setState("toBeDownloaded");
+    } catch (err) {
+      console.error("Compression failed:", err);
+      setState("error");
+    }
   }
 
   const changeHandler = (event) => {
@@ -116,6 +104,14 @@ function App() {
         </form>
       )}
       {state === "loading" && "Loading...."}
+      {state === "error" && (
+        <>
+          <p style={{color: "red"}}>Compression failed. Check the console for details.</p>
+          <div className={"blue padded-button padding-top"}>
+            <a href={"./"}>{"Try again"}</a>
+          </div>
+        </>
+      )}
       {state === "toBeDownloaded" && (
         <>
           <div className={"success-button padded-button"}>
