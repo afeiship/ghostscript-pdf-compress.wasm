@@ -77,18 +77,18 @@ h3 {
 /* Level cards */
 .level-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 1.5rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 1.2rem;
 }
 
 .level-card {
   border: 2px solid #e0e0e0;
-  border-radius: 10px;
-  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  padding: 0.6rem 0.4rem;
   cursor: pointer;
   transition: all 0.15s;
-  text-align: left;
+  text-align: center;
 }
 
 .level-card:hover {
@@ -102,20 +102,72 @@ h3 {
 
 .level-label {
   font-weight: 600;
-  font-size: 0.95rem;
-  margin-bottom: 0.2rem;
+  font-size: 0.9rem;
   color: #1a1a2e;
 }
 
-.level-desc {
-  font-size: 0.8rem;
-  color: #555;
-  margin-bottom: 0.15rem;
+/* Sliders */
+.slider-section {
+  background: #f9f9fb;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.2rem;
 }
 
-.level-detail {
-  font-size: 0.7rem;
-  color: #999;
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.7rem;
+}
+
+.slider-row:last-of-type {
+  margin-bottom: 0;
+}
+
+.slider-row label {
+  width: 40px;
+  text-align: right;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  flex-shrink: 0;
+}
+
+.slider-row input[type="range"] {
+  flex: 1;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #ddd;
+  border-radius: 3px;
+  outline: none;
+}
+
+.slider-row input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #4a7dff;
+  cursor: pointer;
+}
+
+.slider-val {
+  min-width: 40px;
+  text-align: right;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4a7dff;
+  flex-shrink: 0;
+}
+
+.estimate {
+  margin-top: 0.7rem;
+  font-size: 0.9rem;
+  color: #2eaa4a;
+  font-weight: 600;
 }
 
 /* Buttons */

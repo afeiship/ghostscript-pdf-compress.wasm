@@ -1,32 +1,13 @@
 import { useState, useRef } from "react";
+import { PDFDocument } from "pdf-lib";
 import "./App.css";
 import { _GSPS2PDF } from "./lib/worker-init.js";
 
-const LEVELS = [
-  {
-    key: "extreme",
-    label: "极高压缩",
-    desc: "最大程度节省存储空间",
-    detail: "光栅化压缩，不可搜索文字",
-  },
-  {
-    key: "high",
-    label: "高压缩",
-    desc: "最适合更快速的在线分享",
-    detail: "光栅化压缩，不可搜索文字",
-  },
-  {
-    key: "medium",
-    label: "中等压缩",
-    desc: "非常适合一般用途",
-    detail: "保留文字可搜索性",
-  },
-  {
-    key: "low",
-    label: "低压缩",
-    desc: "图像清晰，文件更小",
-    detail: "保留文字可搜索性",
-  },
+const PRESETS = [
+  { key: "extreme", label: "极高", dpi: 50, quality: 4 },
+  { key: "high", label: "高", dpi: 72, quality: 8 },
+  { key: "medium", label: "中等", dpi: 120, quality: 40 },
+  { key: "low", label: "低", dpi: 200, quality: 65 },
 ];
 
 function formatSize(bytes) {
@@ -35,24 +16,61 @@ function formatSize(bytes) {
   return (bytes / (1024 * 1024)).toFixed(1) + " MB";
 }
 
+function estimateSize(pageInfo, dpi, quality) {
+  if (!pageInfo) return null;
+  const { count, avgWidth, avgHeight } = pageInfo;
+  const pixW = (avgWidth / 72) * dpi;
+  const pixH = (avgHeight / 72) * dpi;
+  const q = quality / 100;
+  const bpp = 0.2 + q * 4.5;
+  return count * pixW * pixH * bpp;
+}
+
 function App() {
   const [state, setState] = useState("init");
   const [file, setFile] = useState(null);
-  const [level, setLevel] = useState("high");
+  const [pageInfo, setPageInfo] = useState(null);
+  const [dpi, setDpi] = useState(72);
+  const [quality, setQuality] = useState(8);
   const [result, setResult] = useState(null);
   const inputRef = useRef(null);
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const f = e.target.files[0];
     if (!f) return;
-    setFile({ name: f.name, size: f.size, url: URL.createObjectURL(f) });
+    const url = URL.createObjectURL(f);
+    setFile({ name: f.name, size: f.size, url });
+
+    try {
+      const buf = await f.arrayBuffer();
+      const doc = await PDFDocument.load(buf);
+      const pages = doc.getPages();
+      const avgWidth =
+        pages.reduce((s, p) => s + p.getWidth(), 0) / pages.length;
+      const avgHeight =
+        pages.reduce((s, p) => s + p.getHeight(), 0) / pages.length;
+      setPageInfo({ count: pages.length, avgWidth, avgHeight });
+    } catch {
+      setPageInfo(null);
+    }
+
     setState("selected");
+  };
+
+  const handlePreset = (preset) => {
+    setDpi(preset.dpi);
+    setQuality(preset.quality);
   };
 
   const handleCompress = async () => {
     setState("loading");
     try {
-      const res = await _GSPS2PDF({ psDataURL: file.url, level });
+      const res = await _GSPS2PDF({
+        psDataURL: file.url,
+        level: "custom",
+        dpi,
+        quality,
+      });
       setResult(res);
       setState("done");
     } catch (err) {
@@ -66,6 +84,7 @@ function App() {
     if (file?.url) URL.revokeObjectURL(file.url);
     setFile(null);
     setResult(null);
+    setPageInfo(null);
     setState("init");
     if (inputRef.current) inputRef.current.value = "";
   };
@@ -75,6 +94,10 @@ function App() {
     file?.size && result?.size
       ? ((1 - result.size / file.size) * 100).toFixed(1)
       : 0;
+  const estimated = estimateSize(pageInfo, dpi, quality);
+
+  const matchPreset = () =>
+    PRESETS.find((p) => p.dpi === dpi && p.quality === quality);
 
   return (
     <div className="app">
@@ -103,26 +126,60 @@ function App() {
       {(state === "selected" || state === "loading") && file && (
         <div className="file-info">
           <span className="file-name">{file.name}</span>
-          <span className="file-size">{formatSize(file.size)}</span>
+          <span className="file-size">
+            {formatSize(file.size)}
+            {pageInfo && ` · ${pageInfo.count} 页`}
+          </span>
         </div>
       )}
 
       {state === "selected" && (
         <>
-          <h3>选择压缩选项</h3>
+          <h3>快速预设</h3>
           <div className="level-grid">
-            {LEVELS.map((l) => (
+            {PRESETS.map((p) => (
               <div
-                key={l.key}
-                className={`level-card ${level === l.key ? "selected" : ""}`}
-                onClick={() => setLevel(l.key)}
+                key={p.key}
+                className={`level-card ${
+                  matchPreset()?.key === p.key ? "selected" : ""
+                }`}
+                onClick={() => handlePreset(p)}
               >
-                <div className="level-label">{l.label}</div>
-                <div className="level-desc">{l.desc}</div>
-                <div className="level-detail">{l.detail}</div>
+                <div className="level-label">{p.label}</div>
               </div>
             ))}
           </div>
+
+          <div className="slider-section">
+            <div className="slider-row">
+              <label>DPI</label>
+              <input
+                type="range"
+                min={30}
+                max={200}
+                value={dpi}
+                onChange={(e) => setDpi(+e.target.value)}
+              />
+              <span className="slider-val">{dpi}</span>
+            </div>
+            <div className="slider-row">
+              <label>质量</label>
+              <input
+                type="range"
+                min={1}
+                max={100}
+                value={quality}
+                onChange={(e) => setQuality(+e.target.value)}
+              />
+              <span className="slider-val">{quality}%</span>
+            </div>
+            {estimated != null && (
+              <div className="estimate">
+                预估大小：~{formatSize(estimated)}
+              </div>
+            )}
+          </div>
+
           <button className="compress-btn" onClick={handleCompress}>
             开始压缩
           </button>

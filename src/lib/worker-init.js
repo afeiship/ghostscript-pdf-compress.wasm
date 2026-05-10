@@ -9,7 +9,13 @@ export async function _GSPS2PDF(dataStruct) {
   window.URL.revokeObjectURL(dataStruct.psDataURL);
 
   worker.postMessage(
-    { pdfData: pdfBuffer, target: "wasm", level: dataStruct.level || "high" },
+    {
+      pdfData: pdfBuffer,
+      target: "wasm",
+      level: dataStruct.level || "custom",
+      dpi: dataStruct.dpi || 72,
+      quality: dataStruct.quality || 10,
+    },
     [pdfBuffer]
   );
 
